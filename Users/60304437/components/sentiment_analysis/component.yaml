@@ -1,0 +1,18 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: sentiment_feature_engineering
+display_name: Sentiment Feature Engineering
+type: command
+inputs:
+  data:
+    type: uri_folder
+outputs:
+  output:
+    type: uri_folder
+code: .
+environment:
+  conda_file: conda.yaml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+command: >
+  python sentiment.py 
+  --data ${{inputs.data}} 
+  --output ${{outputs.output}}

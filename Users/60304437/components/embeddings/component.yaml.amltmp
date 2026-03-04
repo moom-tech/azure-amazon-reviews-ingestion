@@ -1,0 +1,22 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: semantic_embedding_engineering
+display_name: Semantic Embedding Engineering
+type: command
+inputs:
+  data:
+    type: uri_folder
+  model_name:
+    type: string
+    default: "all-MiniLM-L6-v2"
+outputs:
+  output:
+    type: uri_folder
+code: .
+environment:
+  conda_file: conda.yaml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+command: >
+  python embedding.py 
+  --data ${{inputs.data}} 
+  --model_name ${{inputs.model_name}}
+  --output ${{outputs.output}}

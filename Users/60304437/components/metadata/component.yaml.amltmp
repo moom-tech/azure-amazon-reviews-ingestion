@@ -1,0 +1,16 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: metadata_feature_engineering
+display_name: Metadata Statistics Engineering
+type: command
+inputs:
+  data:
+    type: uri_folder
+outputs:
+  output:
+    type: uri_folder
+code: .
+environment: azureml:AzureML-sklearn-1.1-ubuntu20.04-py38-cpu@latest
+command: >
+  python metadata_features.py 
+  --data ${{inputs.data}} 
+  --output ${{outputs.output}}

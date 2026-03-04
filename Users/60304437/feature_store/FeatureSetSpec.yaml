@@ -1,0 +1,36 @@
+$schema: http://azureml/sdk-2-0/FeatureSetSpec.json
+
+source:
+  type: parquet
+  path: azureml://subscriptions/a00dcbea-fd05-4973-82dc-120208b60116/resourceGroups/rg-60304437/providers/Microsoft.MachineLearningServices/workspaces/amazon-electronics-fs-60304437/datastores/workspaceblobstore/paths/azureml/orange_gold_248n51bd51/merge_all/out/
+  timestamp_column:
+    name: unixReviewTime 
+
+index_columns:
+  - name: asin
+    type: string
+  - name: reviewerID
+    type: string
+
+features:
+  - name: review_length
+    type: double
+  - name: sentiment_score
+    type: double
+
+index_columns:
+  - name: asin
+    type: string
+  - name: reviewerID
+    type: string
+
+features:
+  - name: review_length
+    type: double
+  - name: sentiment_score
+    type: double
+  # If your merge_all script outputted SBERT embeddings as emb_0, emb_1, etc.
+  - name: emb_0
+    type: double
+  - name: emb_1
+    type: double

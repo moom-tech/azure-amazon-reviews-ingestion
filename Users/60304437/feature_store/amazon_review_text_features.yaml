@@ -1,0 +1,8 @@
+$schema: https://azuremlschemas.azureedge.net/latest/featureSet.schema.json
+name: amazon_review_text_features
+version: "1"  # Quotes are required here
+entities:
+  - azureml:amazon_product_entity:1
+specification:
+  path: .
+description: Feature set containing review length, sentiment, and SBERT embeddings.

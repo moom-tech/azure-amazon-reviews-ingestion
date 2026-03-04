@@ -1,0 +1,72 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: Amazon-Reviews-Feature-Engineering
+compute: azureml:cpu-cluster
+
+inputs:
+  sampled_data:
+    type: uri_folder
+    path: azureml:amazon_electronics_features_v1_sampled@latest
+jobs:
+  # 1. Split to prevent data leakage
+  split:
+    type: command
+    component: azureml:split_dataset@latest
+    inputs:
+      data: ${{parent.inputs.sampled_data}}
+
+  # 2. Normalize text for all three splits
+  normalize_train:
+    type: command
+    component: azureml:normalize_text@latest
+    inputs:
+      data: ${{parent.jobs.split.outputs.train}}
+
+  normalize_val:
+    type: command
+    component: azureml:normalize_text@latest
+    inputs:
+      data: ${{parent.jobs.split.outputs.val}}
+
+  normalize_test:
+    type: command
+    component: azureml:normalize_text@latest
+    inputs:
+      data: ${{parent.jobs.split.outputs.test}}
+
+  # 3. Feature Extraction (Running on Normalized Training Data)
+  length_train:
+    type: command
+    component: azureml:review_length@latest
+    inputs:
+      data: ${{parent.jobs.normalize_train.outputs.out}}
+
+  sentiment_train:
+    type: command
+    component: azureml:sentiment_feature_engineering@latest
+    inputs:
+      data: ${{parent.jobs.normalize_train.outputs.out}}
+
+  sbert_train:
+    type: command
+    component: azureml:semantic_embedding_engineering@latest
+    inputs:
+      data: ${{parent.jobs.normalize_train.outputs.out}}
+
+  # 4. TF-IDF (Fitted on Train, Transformed on Val/Test)
+  tfidf:
+    type: command
+    component: azureml:tfidf_feature_engineering@latest
+    inputs:
+      train_data: ${{parent.jobs.normalize_train.outputs.out}}
+      val_data: ${{parent.jobs.normalize_val.outputs.out}}
+      test_data: ${{parent.jobs.normalize_test.outputs.out}}
+ # 5. Final Merge of all Training Features
+  merge_all:
+    type: command
+    component: azureml:merge_all_features@latest
+    inputs:
+      length_data: ${{parent.jobs.length_train.outputs.out}}
+      sentiment_data: ${{parent.jobs.sentiment_train.outputs.output}}
+      tfidf_data: ${{parent.jobs.tfidf.outputs.train_out}}
+      embedding_data: ${{parent.jobs.sbert_train.outputs.output}}
