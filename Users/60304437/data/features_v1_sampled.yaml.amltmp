@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+name: amazon_electronics_features_v1_sampled
+version: 1
+type: uri_folder
+path: azureml://datastores/blobkey/paths/features_v1_sampled/
