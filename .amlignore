@@ -1,0 +1,16 @@
+# Exclude large data directories
+data/
+results/
+notebooks/
+
+# Exclude cache and temporary files
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+env/
+
+# Exclude large model files
+*.pkl
+*.joblib
+*.model

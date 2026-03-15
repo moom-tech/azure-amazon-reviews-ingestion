@@ -1,0 +1,9 @@
+{
+  "data_dir": "data/raw",
+  "output_dir": "results",
+  "settings": "minimal",
+  "top_k": 100,
+  "ga_gen": 20,
+  "ga_pop": 50,
+  "debug": false
+}
